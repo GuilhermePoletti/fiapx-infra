@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fiapx-config
+  namespace: fiapx
+data:
+  # ─── Portas dos Serviços ──────────────────
+  AUTH_SERVICE_PORT: "3001"
+  MANAGER_SERVICE_PORT: "3002"
+
+  # ─── MinIO ────────────────────────────────
+  MINIO_ENDPOINT: "minio"
+  MINIO_API_PORT: "9000"
+  MINIO_BUCKET_RAW: "raw-videos"
+  MINIO_BUCKET_PROCESSED: "processed-files"
+
+  # ─── RabbitMQ ─────────────────────────────
+  RABBITMQ_HOST: "rabbitmq"
+  RABBITMQ_PORT: "5672"
+
+  # ─── SMTP (Mailhog) ──────────────────────
+  SMTP_HOST: "mailhog"
+  SMTP_PORT: "1025"
+  SMTP_FROM: "noreply@fiapx.com"
+
+  # ─── JWT ──────────────────────────────────
+  JWT_EXPIRATION: "24h"
+  JWT_ISSUER: "fiapx-auth"
+
+  # ─── Kong ─────────────────────────────────
+  KONG_PROXY_PORT: "8000"
+  KONG_ADMIN_PORT: "8001"

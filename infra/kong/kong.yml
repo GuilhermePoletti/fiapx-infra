@@ -1,0 +1,50 @@
+# =============================================================================
+# Kong — Configuração Declarativa (Referência)
+# =============================================================================
+# Este arquivo documenta a configuração do Kong em formato declarativo.
+# A configuração REAL é aplicada pelo script setup-kong.sh via Admin API.
+# Este arquivo serve como DOCUMENTAÇÃO e BACKUP da configuração.
+# =============================================================================
+
+_format_version: "3.0"
+
+services:
+  # ─── Auth Service ──────────────────────────────────
+  - name: auth-service
+    url: http://auth:3001
+    routes:
+      - name: auth-route
+        paths:
+          - /api/auth
+        strip_path: true
+        protocols:
+          - http
+          - https
+
+  # ─── Video Manager Service ─────────────────────────
+  - name: manager-service
+    url: http://manager:3002
+    routes:
+      - name: manager-route
+        paths:
+          - /api/videos
+        strip_path: true
+        protocols:
+          - http
+          - https
+
+# ─── Plugins ──────────────────────────────────────────
+plugins:
+  - name: jwt
+    route: manager-route
+    config:
+      claims_to_verify:
+        - exp
+
+# ─── Consumers ────────────────────────────────────────
+consumers:
+  - username: fiapx-user
+    jwt_secrets:
+      - key: fiapx-auth    # Mesmo valor de JWT_ISSUER
+        algorithm: HS256
+        # secret vem da variável JWT_SECRET do .env

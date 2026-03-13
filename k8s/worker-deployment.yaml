@@ -1,0 +1,82 @@
+# Worker NÃO tem Service — é um daemon sem porta HTTP
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: fiapx
+  labels:
+    app: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+        - name: worker
+          image: fiapx-worker:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: MINIO_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: MINIO_ENDPOINT
+            - name: MINIO_API_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: MINIO_API_PORT
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: MINIO_ROOT_USER
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: MINIO_ROOT_PASSWORD
+            - name: MINIO_BUCKET_RAW
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: MINIO_BUCKET_RAW
+            - name: MINIO_BUCKET_PROCESSED
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: MINIO_BUCKET_PROCESSED
+            - name: RABBITMQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: RABBITMQ_HOST
+            - name: RABBITMQ_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: RABBITMQ_PORT
+            - name: RABBITMQ_DEFAULT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: RABBITMQ_DEFAULT_USER
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: RABBITMQ_DEFAULT_PASS
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"

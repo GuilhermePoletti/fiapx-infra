@@ -1,0 +1,12 @@
+{
+  "urls": [
+    {
+      "url": "http://localhost:3001/api-docs-json",
+      "name": "Auth Service"
+    },
+    {
+      "url": "http://localhost:3002/api-docs-json",
+      "name": "Video Manager Service"
+    }
+  ]
+}

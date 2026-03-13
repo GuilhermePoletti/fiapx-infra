@@ -1,0 +1,76 @@
+# Notifier NÃO tem Service — é um daemon sem porta HTTP
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notifier
+  namespace: fiapx
+  labels:
+    app: notifier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notifier
+  template:
+    metadata:
+      labels:
+        app: notifier
+    spec:
+      initContainers:
+        - name: prisma-migrate
+          image: fiapx-notifier:latest
+          imagePullPolicy: IfNotPresent
+          command: ["npx", "prisma", "migrate", "deploy"]
+          env:
+            - name: NOTIFICATION_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: NOTIFICATION_DATABASE_URL
+      containers:
+        - name: notifier
+          image: fiapx-notifier:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: NOTIFICATION_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: NOTIFICATION_DATABASE_URL
+            - name: RABBITMQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: RABBITMQ_HOST
+            - name: RABBITMQ_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: RABBITMQ_PORT
+            - name: RABBITMQ_DEFAULT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: RABBITMQ_DEFAULT_USER
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: RABBITMQ_DEFAULT_PASS
+            - name: SMTP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: SMTP_HOST
+            - name: SMTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: SMTP_PORT
+            - name: SMTP_FROM
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: SMTP_FROM

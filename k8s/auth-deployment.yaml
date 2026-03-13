@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+  namespace: fiapx
+  labels:
+    app: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      initContainers:
+        - name: prisma-migrate
+          image: fiapx-auth:latest
+          imagePullPolicy: IfNotPresent
+          command: ["npx", "prisma", "migrate", "deploy"]
+          env:
+            - name: AUTH_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: AUTH_DATABASE_URL
+      containers:
+        - name: auth
+          image: fiapx-auth:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3001
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: AUTH_SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: AUTH_SERVICE_PORT
+            - name: AUTH_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: AUTH_DATABASE_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: JWT_SECRET
+            - name: JWT_EXPIRATION
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: JWT_EXPIRATION
+            - name: JWT_ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: JWT_ISSUER
+          readinessProbe:
+            httpGet:
+              path: /api-docs
+              port: 3001
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+  namespace: fiapx
+spec:
+  selector:
+    app: auth
+  ports:
+    - port: 3001
+      targetPort: 3001
