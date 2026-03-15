@@ -17,8 +17,8 @@ spec:
     spec:
       initContainers:
         - name: prisma-migrate
-          image: fiapx-auth:latest
-          imagePullPolicy: IfNotPresent
+          image: guipoletti/fiapx-auth:latest
+          imagePullPolicy: Always
           command: ["npx", "prisma", "migrate", "deploy"]
           env:
             - name: AUTH_DATABASE_URL
@@ -28,8 +28,8 @@ spec:
                   key: AUTH_DATABASE_URL
       containers:
         - name: auth
-          image: fiapx-auth:latest
-          imagePullPolicy: IfNotPresent
+          image: guipoletti/fiapx-auth:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3001
           env:

@@ -17,8 +17,8 @@ spec:
     spec:
       initContainers:
         - name: prisma-migrate
-          image: fiapx-manager:latest
-          imagePullPolicy: IfNotPresent
+          image: guipoletti/fiapx-manager:latest
+          imagePullPolicy: Always
           command: ["npx", "prisma", "migrate", "deploy"]
           env:
             - name: VIDEO_DATABASE_URL
@@ -28,8 +28,8 @@ spec:
                   key: VIDEO_DATABASE_URL
       containers:
         - name: manager
-          image: fiapx-manager:latest
-          imagePullPolicy: IfNotPresent
+          image: guipoletti/fiapx-manager:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3002
           env:
