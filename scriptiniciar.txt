@@ -1,0 +1,27 @@
+# 1. Aplicar a fundação (Secrets, Configs, Namespaces)
+kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/secrets.yaml
+kubectl apply -f k8s/configmap.yaml
+kubectl apply -f k8s/postgres-init-configmap.yaml
+kubectl create configmap swagger-config --from-file=infra/swagger/swagger-config.json -n fiapx
+kubectl create configmap infra-scripts --from-file=infra/kong/setup-kong.sh --from-file=infra/minio/setup-buckets.sh -n fiapx
+
+# 2. Aplicar a infraestrutura (Bancos e Gateway)
+kubectl apply -f k8s/postgres-deployment.yaml
+kubectl apply -f k8s/rabbitmq-deployment.yaml
+kubectl apply -f k8s/minio-deployment.yaml
+kubectl apply -f k8s/redis-deployment.yaml
+kubectl apply -f k8s/kong-deployment.yaml
+kubectl apply -f k8s/mailhog-deployment.yaml
+
+# 3. Aplicar os microsserviços e Jobs (Após uns 15 segundinhos)
+kubectl apply -f k8s/kong-migrations-job.yaml
+kubectl apply -f k8s/auth-deployment.yaml
+kubectl apply -f k8s/manager-deployment.yaml
+kubectl apply -f k8s/worker-deployment.yaml
+kubectl apply -f k8s/notifier-deployment.yaml
+kubectl apply -f k8s/swagger-deployment.yaml
+
+# 4. Jobs finais
+kubectl apply -f k8s/minio-setup-job.yaml
+kubectl apply -f k8s/kong-setup-job.yaml

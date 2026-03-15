@@ -42,20 +42,20 @@ spec:
                 secretKeyRef:
                   name: fiapx-secrets
                   key: POSTGRES_PASSWORD
-            - name: POSTGRES_MULTIPLE_DATABASES
-              value: "auth_db,video_db,notification_db,kong_db"
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
-          readinessProbe:
-            exec:
-              command: [pg_isready, -U, postgres]
-            initialDelaySeconds: 5
-            periodSeconds: 5
+            - name: init-script
+              mountPath: /docker-entrypoint-initdb.d/init.sql
+              subPath: init.sql
+
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
             claimName: postgres-pvc
+        - name: init-script
+          configMap:
+            name: postgres-init-script
 ---
 apiVersion: v1
 kind: Service

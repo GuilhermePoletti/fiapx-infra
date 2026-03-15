@@ -1,11 +1,11 @@
 {
   "urls": [
     {
-      "url": "http://localhost:3001/api-docs-json",
+      "url": "http://192.168.49.2:30080/api/auth/api-docs-json",
       "name": "Auth Service"
     },
     {
-      "url": "http://localhost:3002/api-docs-json",
+      "url": "http://192.168.49.2:30080/manager-docs/api-docs-json",
       "name": "Video Manager Service"
     }
   ]

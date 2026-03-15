@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kong-setup
+  namespace: fiapx
+spec:
+  template:
+    spec:
+      containers:
+        - name: kong-setup
+          image: alpine:3.19
+          env:
+            - name: KONG_ADMIN_URL
+              value: "http://kong:8001"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: JWT_SECRET
+            - name: JWT_ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: JWT_ISSUER
+          command: ["/bin/sh", "/infra-scripts/setup-kong.sh"]
+          volumeMounts:
+            - name: infra-scripts
+              mountPath: /infra-scripts
+      restartPolicy: OnFailure
+      volumes:
+        - name: infra-scripts
+          configMap:
+            name: infra-scripts
+            defaultMode: 0755

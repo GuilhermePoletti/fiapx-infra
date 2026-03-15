@@ -46,12 +46,7 @@ spec:
               value: "0.0.0.0:8001"
             - name: KONG_ADMIN_GUI_URL
               value: "http://localhost:8002"
-          readinessProbe:
-            httpGet:
-              path: /status
-              port: 8001
-            initialDelaySeconds: 15
-            periodSeconds: 10
+
 ---
 apiVersion: v1
 kind: Service

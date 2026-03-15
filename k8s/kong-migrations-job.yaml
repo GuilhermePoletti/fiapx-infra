@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kong-migrations
+  namespace: fiapx
+spec:
+  template:
+    spec:
+      containers:
+        - name: kong-migrations
+          image: kong:3.9
+          env:
+            - name: KONG_DATABASE
+              value: "postgres"
+            - name: KONG_PG_HOST
+              value: "postgres"
+            - name: KONG_PG_PORT
+              value: "5432"
+            - name: KONG_PG_DATABASE
+              value: "kong_db"
+            - name: KONG_PG_USER
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: POSTGRES_USER
+            - name: KONG_PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: POSTGRES_PASSWORD
+          command: [ "kong", "migrations", "bootstrap" ]
+      restartPolicy: OnFailure

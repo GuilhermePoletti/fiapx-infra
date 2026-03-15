@@ -32,11 +32,7 @@ spec:
                 secretKeyRef:
                   name: fiapx-secrets
                   key: RABBITMQ_DEFAULT_PASS
-          readinessProbe:
-            exec:
-              command: [rabbitmq-diagnostics, check_port_connectivity]
-            initialDelaySeconds: 15
-            periodSeconds: 10
+
 ---
 apiVersion: v1
 kind: Service

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swagger-ui
+  namespace: fiapx
+  labels:
+    app: swagger-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swagger-ui
+  template:
+    metadata:
+      labels:
+        app: swagger-ui
+    spec:
+      containers:
+        - name: swagger-ui
+          image: swaggerapi/swagger-ui:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CONFIG_URL
+              value: /config/swagger-config.json
+          volumeMounts:
+            - name: swagger-config
+              mountPath: /usr/share/nginx/html/config/swagger-config.json
+              subPath: swagger-config.json
+      volumes:
+        - name: swagger-config
+          configMap:
+            name: swagger-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: swagger-ui
+  namespace: fiapx
+spec:
+  type: NodePort
+  selector:
+    app: swagger-ui
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30081

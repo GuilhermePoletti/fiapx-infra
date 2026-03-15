@@ -67,11 +67,19 @@ wget -qO- --post-data \
 
 # ─── 4. Route: Manager ───────────────────────────────
 echo ""
-echo "[5/7] Registrando Route: /api/videos → manager-service"
+echo "[5/7] Registrando Route: /api/videos → manager-service (Protegido)"
 wget -qO- --post-data \
   "name=manager-route&paths[]=/api/videos&strip_path=true&protocols[]=http&protocols[]=https" \
   "${KONG_ADMIN}/services/manager-service/routes" 2>/dev/null || \
   echo "       (Route manager-route já existe — OK)"
+
+# ─── 4.5 Route Publica: Manager Docs ───────────────────────────────
+echo ""
+echo "[5.5/7] Registrando Route: /manager-docs → manager-service (Publico p/ Swagger)"
+wget -qO- --post-data \
+  "name=manager-docs-route&paths[]=/manager-docs&strip_path=true&protocols[]=http&protocols[]=https" \
+  "${KONG_ADMIN}/services/manager-service/routes" 2>/dev/null || \
+  echo "       (Route manager-docs-route já existe — OK)"
 
 # ─── 5. Plugin JWT no Manager ────────────────────────
 echo ""

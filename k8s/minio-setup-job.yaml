@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-setup
+  namespace: fiapx
+spec:
+  template:
+    spec:
+      containers:
+        - name: minio-setup
+          image: minio/mc:latest
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: MINIO_ROOT_USER
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fiapx-secrets
+                  key: MINIO_ROOT_PASSWORD
+            - name: MINIO_BUCKET_RAW
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: MINIO_BUCKET_RAW
+            - name: MINIO_BUCKET_PROCESSED
+              valueFrom:
+                configMapKeyRef:
+                  name: fiapx-config
+                  key: MINIO_BUCKET_PROCESSED
+          command: ["/bin/sh", "/infra-scripts/setup-buckets.sh"]
+          volumeMounts:
+            - name: infra-scripts
+              mountPath: /infra-scripts
+      restartPolicy: OnFailure
+      volumes:
+        - name: infra-scripts
+          configMap:
+            name: infra-scripts
+            defaultMode: 0755
