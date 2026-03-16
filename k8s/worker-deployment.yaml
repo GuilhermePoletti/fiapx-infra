@@ -19,7 +19,7 @@ spec:
       containers:
         - name: worker
           image: guipoletti/fiapx-worker:latest
-          imagePullPolicy: Always
+          imagePullPolicy: Never
           env:
             - name: NODE_ENV
               value: production
