@@ -39,7 +39,7 @@ graph TD
     Notifier -->|Dispara E-mail HTML| Mailhog[Mailhog SMTP]
 ```
 
-## 🛠️ Como rodar o Projeto Localmente (Para Avaliação)
+## 🛠️ Como rodar o Projeto Localmente
 
 A aplicação foi empacotada para rodar integralmente dentro de um cluster Kubernetes local via **Minikube**. Siga o passo a passo para inicializar o cluster e subir toda a stack de ponta-a-ponta (Bancos de dados e Aplicações).
 
@@ -124,7 +124,7 @@ minikube ip
 ```
 *(Nota: Substitua `192.168.49.2` abaixo pelo IP que esse comando retornar).*
 
-As nossas interfaces gráficas foram expostas de forma segura na Kubernetes usando portas `NodePort` para facilitar a avaliação:
+As nossas interfaces gráficas foram expostas de forma segura na Kubernetes usando portas `NodePort` para facilitar a execução:
 
 * **Documentação Open API / UI (Swagger):** [http://192.168.49.2:30081/](http://192.168.49.2:30081/)  
   *(Acessando o Swagger você poderá usar a interface amigável unificada para: Criar Usuário, Fazer Login, Capturar Token JWT e enviar Vídeos na rota protegida).*
