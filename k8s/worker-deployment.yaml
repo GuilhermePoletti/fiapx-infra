@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: guipoletti/fiapx-worker:latest
+          image: guipoletti/fiapx-worker:6b2542d
           imagePullPolicy: Never
           env:
             - name: NODE_ENV
