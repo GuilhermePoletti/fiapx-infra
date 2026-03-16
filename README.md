@@ -132,7 +132,7 @@ As nossas interfaces gráficas foram expostas de forma segura na Kubernetes usan
 * **Caixa de E-mails Fictícia (Mailhog):** [http://192.168.49.2:30080/mailhog](http://192.168.49.2:30080/mailhog)  
   *(Acesse para verificar todos os disparos assíncronos de e-mail efetuados com relatórios do Worker processado com sucesso ou falha).*
 
-## 🔄 Pipeline State-of-the-Art (CI/CD e GitOps Local)
+## 🔄 Pipeline (CI/CD e GitOps Local)
 
 Este projeto não possui imagens embutidas presas por Docker-compose raiz, ele utiliza padrão industrial Cloud-Native:
 1. **GitHub Actions (Integração Contínua):** Cada um dos 4 repositórios Node.js possui um Workflow (`.github/workflows/ci-cd.yaml`) independente. A cada alteração na branch principal, o servidor K8s gera builds rodando NPM, empacota contêineres e envia ao Registry Público (Docker Hub).
