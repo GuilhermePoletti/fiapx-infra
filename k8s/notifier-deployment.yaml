@@ -18,7 +18,7 @@ spec:
     spec:
       initContainers:
         - name: prisma-migrate
-          image: guipoletti/fiapx-notifier:latest
+          image: guipoletti/fiapx-notifier:86491b3
           imagePullPolicy: Never
           command: ["npx", "prisma", "migrate", "deploy"]
           env:
@@ -29,7 +29,7 @@ spec:
                   key: NOTIFICATION_DATABASE_URL
       containers:
         - name: notifier
-          image: guipoletti/fiapx-notifier:latest
+          image: guipoletti/fiapx-notifier:86491b3
           imagePullPolicy: Never
           env:
             - name: NODE_ENV
